@@ -79,6 +79,9 @@ const export_data = function export_data() {
 }
 
 fetch(style_url)
+  .catch(err => {
+    console.log('Le `fetch()` du style à échoué');
+  })
   .then((res) => res.json())
   .then((style) => {
     // Patch tms scheme to xyz to make it compatible for Maplibre GL JS / Mapbox GL JS
