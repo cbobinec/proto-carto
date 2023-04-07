@@ -114,6 +114,16 @@ fetch(style_url)
         maxzoom: 10,
       });
 
+      const monInterpolation = [
+        0, "#FFFFCC",
+        4, "#FFE6B4",
+        9, "#FFC696",
+        14, "#FFA176",
+        20, "#FF7755",
+        28, "#E05544",
+        39, "#cc3333",
+      ]
+
       const layerOptions200m = {
         id: "insee_carroyage200m_fill",
         source: "insee200m",
@@ -137,20 +147,7 @@ fetch(style_url)
             // Avec formule (pas simple) https://github.com/mapbox/mapbox-gl-js/issues/5685
             // Formule 100* (men_1ind/ men)
             indicateur_expression,
-            0,
-            "#FFFFCC",
-            4,
-            "#FFE6B4",
-            9,
-            "#FFC696",
-            14,
-            "#FFA176",
-            20,
-            "#FF7755",
-            28,
-            "#E05544",
-            39,
-            "#cc3333",
+            ...monInterpolation,
           ],
         },      
         
