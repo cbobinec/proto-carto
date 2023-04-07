@@ -11,8 +11,8 @@ const layer_insertion = "toponyme - bornes postales haute - chemins";
 // Indicateur représenté 
 // TODO Généraliser avec plusieurs et le menu déroulant...
 const indicateur_titre = "Part des ménages pauvres"
-// Expression mapbox pour 100 * Men_pauv/Men
-const indicateur_expression = ["*", 100, ["/", ["get", "Men_pauv"], ["get", "Men"]]]
+
+
 
 // Légende
 const classes_names = [
@@ -179,6 +179,26 @@ fetch(style_url)
       );      
     });
 
+    // Change layer paint according configuration object
+    const indicatorsSelect = document.querySelector('#indicators');
+    indicatorsSelect.addEventListener('change', event => {
+      const value = event.target.value;
+
+      const indicatorSettings = indicateurs[value];
+      const paint = indicatorSettings.paint;
+
+      for (property in paint) {
+        const propertyValue = paint[property];
+        map.setPaintProperty('insee_carroyage200m_fill', property, propertyValue);
+      }
+    });
+
+    // Change layer opacity with range slider
+    const opacitySlider = document.querySelector('#opacitySlider');
+    opacitySlider.addEventListener('change', event => {
+      map.setPaintProperty('insee_carroyage200m_fill', 'fill-opacity', Number(event.target.value));
+    });
+
     // Affichage de la valeur de l'indicateur dans le volet gauche
     const donnees = document.getElementById("donnees");
 
@@ -242,6 +262,14 @@ fetch(style_url)
       legend.appendChild(item);
     });
     // Fin affichage de la légende
+
+
+
+
+
+
+
+
 
     // Sélection multiple
     const canvas = map.getCanvasContainer();
