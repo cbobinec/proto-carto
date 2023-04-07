@@ -179,6 +179,11 @@ fetch(style_url)
       );      
     });
 
+    map.loadImage('/grille15.png', (error, image) => {
+      if (error) throw error;
+      if (!map.hasImage('grille')) map.addImage('grille', image);
+    });
+
     // Change layer paint according configuration object
     const indicatorsSelect = document.querySelector('#indicators');
     indicatorsSelect.addEventListener('change', event => {

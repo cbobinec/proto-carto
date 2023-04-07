@@ -29,4 +29,12 @@ const indicateurs = {
       'fill-opacity': 1,
     },
   },
+  test_hachures: {
+    title: 'Titre de mon indicateur 3',
+    paint: {
+      'fill-color': 'rgba(0, 0, 0, 0)',
+      'fill-opacity': 1,
+      'fill-pattern': 'grille',
+    },
+  },
 };
