@@ -100,6 +100,10 @@ fetch(style_url)
     // Suppression du zoom par sélection pour le remplacer par notre selection de carreaux avec Maj
     map.boxZoom.disable();
 
+    map.on('error', error => {
+      console.log('A error event occurred.', error);
+    });
+
     map.on("load", () => {
       // On désactive le compass
       map.addControl(new maplibregl.NavigationControl({
