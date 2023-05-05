@@ -11,8 +11,8 @@ const layer_insertion = "toponyme - bornes postales haute - chemins";
 // Indicateur représenté 
 // TODO Généraliser avec plusieurs et le menu déroulant...
 const indicateur_titre = "Part des ménages pauvres"
-// Expression mapbox pour 100 * Men_pauv/Men
-const indicateur_expression = ["*", 100, ["/", ["get", "Men_pauv"], ["get", "Men"]]]
+
+
 
 // Légende
 const classes_names = [
@@ -79,6 +79,9 @@ const export_data = function export_data() {
 }
 
 fetch(style_url)
+  .catch(err => {
+    console.log('Le `fetch()` du style à échoué');
+  })
   .then((res) => res.json())
   .then((style) => {
     // Patch tms scheme to xyz to make it compatible for Maplibre GL JS / Mapbox GL JS
@@ -97,6 +100,10 @@ fetch(style_url)
     // Suppression du zoom par sélection pour le remplacer par notre selection de carreaux avec Maj
     map.boxZoom.disable();
 
+    map.on('error', error => {
+      console.log('A error event occurred.', error);
+    });
+
     map.on("load", () => {
       // On désactive le compass
       map.addControl(new maplibregl.NavigationControl({
@@ -113,6 +120,16 @@ fetch(style_url)
         minzoom: 10,
         maxzoom: 10,
       });
+
+      const monInterpolation = [
+        0, "#FFFFCC",
+        4, "#FFE6B4",
+        9, "#FFC696",
+        14, "#FFA176",
+        20, "#FF7755",
+        28, "#E05544",
+        39, "#cc3333",
+      ]
 
       const layerOptions200m = {
         id: "insee_carroyage200m_fill",
@@ -137,20 +154,7 @@ fetch(style_url)
             // Avec formule (pas simple) https://github.com/mapbox/mapbox-gl-js/issues/5685
             // Formule 100* (men_1ind/ men)
             indicateur_expression,
-            0,
-            "#FFFFCC",
-            4,
-            "#FFE6B4",
-            9,
-            "#FFC696",
-            14,
-            "#FFA176",
-            20,
-            "#FF7755",
-            28,
-            "#E05544",
-            39,
-            "#cc3333",
+            ...monInterpolation,
           ],
         },      
         
@@ -177,6 +181,31 @@ fetch(style_url)
         },
         layer_insertion
       );      
+    });
+
+    map.loadImage('/grille15.png', (error, image) => {
+      if (error) throw error;
+      if (!map.hasImage('grille')) map.addImage('grille', image);
+    });
+
+    // Change layer paint according configuration object
+    const indicatorsSelect = document.querySelector('#indicators');
+    indicatorsSelect.addEventListener('change', event => {
+      const value = event.target.value;
+
+      const indicatorSettings = indicateurs[value];
+      const paint = indicatorSettings.paint;
+
+      for (property in paint) {
+        const propertyValue = paint[property];
+        map.setPaintProperty('insee_carroyage200m_fill', property, propertyValue);
+      }
+    });
+
+    // Change layer opacity with range slider
+    const opacitySlider = document.querySelector('#opacitySlider');
+    opacitySlider.addEventListener('change', event => {
+      map.setPaintProperty('insee_carroyage200m_fill', 'fill-opacity', Number(event.target.value));
     });
 
     // Affichage de la valeur de l'indicateur dans le volet gauche
@@ -242,6 +271,14 @@ fetch(style_url)
       legend.appendChild(item);
     });
     // Fin affichage de la légende
+
+
+
+
+
+
+
+
 
     // Sélection multiple
     const canvas = map.getCanvasContainer();
