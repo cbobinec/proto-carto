@@ -187,21 +187,21 @@ fetch(style_url)
 
     // Contours IGN
     map.addSource("wms-test-source", {
-      type: "vector",
+      type: "raster",
       // use the tiles option to specify a WMS tile source URL
       // https://wxs.ign.fr/cartovecto/geoportail/v/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities
       // https://maplibre.org/maplibre-style-spec/sources/
       tiles: [
-        "https://wxs.ign.fr/cartovecto/geoportail/v/wms?bbox={bbox-epsg-3857}&service=WMS&version=1.3.0&request=GetMap&srs=EPSG:3857&transparent=true&width=512&height=512&layers=STATISTICALUNITS.IRIS",
+        "https://wxs.ign.fr/cartovecto/geoportail/v/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.3.0&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=STATISTICALUNITS.IRIS",
         // "https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015",
       ],
-      tileSize: 512,
+      tileSize: 256,
     });
 
     map.addLayer(
       {
         id: "wms-test-layer",
-        type: "vector",
+        type: "raster",
         source: "wms-test-source",
         paint: {},
       }
