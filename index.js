@@ -39,8 +39,9 @@ const classes_colors = [
 //const default_center = [2.37, 48.881];
 //const default_zoom = 11;
 // Gros zoom moins consommateur pour les tests
-const default_center = [-1.546, 47.204];
-const default_zoom = 15;
+const default_center = [2.37, 48.881];
+const default_zoom = 11;
+console.log("paf");
 // Niveau de zoom associé à la recherche par adresse 
 const default_zoom_search = 14;
 
@@ -60,11 +61,13 @@ ${Object.entries(obj)
 </table>`;
 
 // Exporte la section préalablement stockée dans le localstorage
-const export_data = function export_data() {  
-  data = localStorage.getItem("json_selected_data");
+const export_data = function export_data(features) {  
+  // data = localStorage.getItem("json_selected_data");
+  // JSON.stringify(features)
+  const data = { type: "FeatureCollection", features: features };
 
   let content = "data:application/json;charset=utf-8," 
-    + data;
+    + JSON.stringify(data);
 
   var element = document.createElement('a');
   element.setAttribute('href', content);
@@ -180,8 +183,30 @@ fetch(style_url)
           filter: ["in", "Idcar_200m", ""],
         },
         layer_insertion
-      );      
+      );   
+
+    // Contours IGN
+    map.addSource("wms-test-source", {
+      type: "vector",
+      // use the tiles option to specify a WMS tile source URL
+      // https://wxs.ign.fr/cartovecto/geoportail/v/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities
+      // https://maplibre.org/maplibre-style-spec/sources/
+      tiles: [
+        "https://wxs.ign.fr/cartovecto/geoportail/v/wms?bbox={bbox-epsg-3857}&service=WMS&version=1.3.0&request=GetMap&srs=EPSG:3857&transparent=true&width=512&height=512&layers=STATISTICALUNITS.IRIS",
+        // "https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015",
+      ],
+      tileSize: 512,
     });
+
+    map.addLayer(
+      {
+        id: "wms-test-layer",
+        type: "vector",
+        source: "wms-test-source",
+        paint: {},
+      }
+    );   
+  });
 
     map.loadImage('/grille15.png', (error, image) => {
       if (error) throw error;
@@ -422,10 +447,16 @@ fetch(style_url)
             Math.round((100 * data.Men_pauv) / data.Men) + " %",
         };
         donnees.innerHTML = makeTable(dataPresentation);
-        localStorage.setItem("json_selected_data",  JSON.stringify(features));
-        donnees.innerHTML += "<br><button onclick='export_data()' id='download_button'>" +
-                              export_text +
-                            "</button>";
+        // localStorage.setItem("json_selected_data",  JSON.stringify(features));
+        // donnees.innerHTML += "<br><button onclick='export_data()' id='download_button'>" +
+        //                       export_text +
+        //                     "</button>";
+        const download_button = document.createElement("button");
+        download_button.textContent = export_text;
+        download_button.id = "download_button";
+        download_button.addEventListener("click", () => export_data(features));
+        donnees.appendChild(document.createElement("br"));   
+        donnees.appendChild(download_button);   
       }
 
       map.dragPan.enable();
