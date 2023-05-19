@@ -61,9 +61,10 @@ const indicateurs = {
   test_hachures: {
     title: 'Titre de mon indicateur 3',
     paint: {
-      'fill-color': 'rgba(0, 0, 0, 0)',
+      'fill-color': '#000000',
       'fill-opacity': 1,
-      'fill-pattern': 'grille',
+      'fill_pattern': 'grille',      
     },
+    filter: ["==", "I_est_200", "0"],
   },
 };
