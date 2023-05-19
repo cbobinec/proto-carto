@@ -558,8 +558,8 @@ fetch(style_url)
       indicateur_valeur_max = Number(document.querySelector('#indicateur_max').value);
       map.setFilter("insee_carroyage200m_fill", [
         "all",
-        [">=", indicateur_expression, indicateur_valeur_min],
-        ["<=", indicateur_expression, indicateur_valeur_max]
+        [">=", indicateur_expression_1, indicateur_valeur_min],
+        ["<=", indicateur_expression_1, indicateur_valeur_max]
       ]);
     }
     );
