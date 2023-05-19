@@ -3,7 +3,8 @@
 const style_url = "https://wxs.ign.fr/essentiels/static/vectorTiles/styles/PLAN.IGN/standard.json";
 // Tuiles carreaux+données Insee
 // Couches les plus fines pour zoom élevé
-const data_url_200m = "https://insee-proto-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf";
+const data_url_200m = "http://127.0.0.1:5500/prototype-carto-fine/tiles/filosofi-200m/{z}/{x}/{y}.pbf";
+//const data_url_200m = "https://insee-proto-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf";
 // Nom de la layer du fond de carte par dessus laquelle "glisser"/intercaler la couche data
 // Permet : fond de carte < couche data insee < libellés du fond de carte
 const layer_insertion = "toponyme - bornes postales haute - chemins";
@@ -120,8 +121,8 @@ fetch(style_url)
         tiles: [
           data_url_200m,
         ],
-        minzoom: 10,
-        maxzoom: 10,
+        minzoom: 11,
+        maxzoom: 11,
       });
 
       const monInterpolation = [
@@ -138,7 +139,7 @@ fetch(style_url)
         id: "insee_carroyage200m_fill",
         source: "insee200m",
         type: "fill",
-        minzoom: 10,
+        minzoom: 11,
         "source-layer": "custom",
         paint: {
           //"fill-opacity": 0.7,
@@ -186,26 +187,26 @@ fetch(style_url)
       );   
 
     // Contours IGN
-    map.addSource("wms-test-source", {
-      type: "raster",
-      // use the tiles option to specify a WMS tile source URL
-      // https://wxs.ign.fr/cartovecto/geoportail/v/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities
-      // https://maplibre.org/maplibre-style-spec/sources/
-      tiles: [
-        "https://wxs.ign.fr/cartovecto/geoportail/v/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.3.0&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=STATISTICALUNITS.IRIS",
-        // "https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015",
-      ],
-      tileSize: 256,
-    });
+    // map.addSource("wms-test-source", {
+    //   type: "raster",
+    //   // use the tiles option to specify a WMS tile source URL
+    //   // https://wxs.ign.fr/cartovecto/geoportail/v/wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetCapabilities
+    //   // https://maplibre.org/maplibre-style-spec/sources/
+    //   tiles: [
+    //     "https://wxs.ign.fr/cartovecto/geoportail/v/wms?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.3.0&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=STATISTICALUNITS.IRIS",
+    //     // "https://img.nj.gov/imagerywms/Natural2015?bbox={bbox-epsg-3857}&format=image/png&service=WMS&version=1.1.1&request=GetMap&srs=EPSG:3857&transparent=true&width=256&height=256&layers=Natural2015",
+    //   ],
+    //   tileSize: 256,
+    // });
 
-    map.addLayer(
-      {
-        id: "wms-test-layer",
-        type: "raster",
-        source: "wms-test-source",
-        paint: {},
-      }
-    );   
+    // map.addLayer(
+    //   {
+    //     id: "wms-test-layer",
+    //     type: "raster",
+    //     source: "wms-test-source",
+    //     paint: {},
+    //   }
+    // );   
   });
 
     map.loadImage('/grille15.png', (error, image) => {
