@@ -209,7 +209,7 @@ fetch(style_url)
     // );   
   });
 
-    map.loadImage('/grille15.png', (error, image) => {
+    map.loadImage('/img/grille15.png', (error, image) => {
       if (error) throw error;
       if (!map.hasImage('grille')) map.addImage('grille', image);
     });
