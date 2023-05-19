@@ -157,8 +157,8 @@ fetch(style_url)
             // ['get', 'Men_1ind'],
             // Avec formule (pas simple) https://github.com/mapbox/mapbox-gl-js/issues/5685
             // Formule 100* (men_1ind/ men)
-            indicateur_expression,
-            ...monInterpolation,
+            indicateur_expression_1,
+            ...classes_1,
           ],
         },      
         
@@ -209,7 +209,7 @@ fetch(style_url)
     // );   
   });
 
-    map.loadImage('/img/grille15.png', (error, image) => {
+    map.loadImage('img/grille15.png', (error, image) => {
       if (error) throw error;
       if (!map.hasImage('grille')) map.addImage('grille', image);
     });
