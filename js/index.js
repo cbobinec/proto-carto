@@ -115,6 +115,8 @@ fetch(style_url)
       }));
       // Mode plein écran
       map.addControl(new maplibregl.FullscreenControl());
+      // Geolocalisation
+      map.addControl(new maplibregl.GeolocateControl());
 
       map.addSource("insee200m", {
         type: "vector",
