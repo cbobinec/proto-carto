@@ -75,7 +75,7 @@
                   'type': 'line',
                   'source': 'qpv-source',
                   'paint': {
-                  'line-color': '#000000',
+                  'line-color': '#2596be',
                   'line-width': 1
                   }
                 });
@@ -99,25 +99,12 @@
                 const layerOptions = {
                 id: 'insee_carroyage200m_fill',
                 source: 'insee200m',
-                type: 'fill',
+                type: 'line',
                 'source-layer': 'custom',
-                paint: {
-                    'fill-opacity': 0.5,
-                    'fill-color': [
-                    'step', // function
-                    ['get', 'Men'], // value
-                    '#FFFFCC',
-                    10, '#FFFFCC',
-                    20, '#FFE6B4',
-                    50, '#FFC696',
-                    300, '#FFA176',
-                    1300, '#FF7755',
-                    3200, '#E05544',
-                    6300, '#cc3333',
-                    12000, '#990000',
-                    23600, '#660000',
-                    ],
-                },
+                  'paint': {
+                    'line-color': '#be4d25',
+                    'line-width': 1
+                  }
                 };
 
                 map.addLayer(layerOptions, 'toponyme quartier ');
