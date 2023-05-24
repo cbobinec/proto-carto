@@ -25,35 +25,84 @@
         color: #1d1d1d;
         font-family: sans-serif;
       }
+
+      #menu {
+        padding: 10px;
+        font-family: 'Open Sans', sans-serif;
+      }
     </style>
   </head>
 
   <body>
     <div>
       <h1>Bac à sable Maplibre : fonds de carte</h1>
+      <div>
+        - <a href="https://docs.mapbox.com/mapbox-gl-js/example/setstyle/">Exemple doc maplibre</a> 
+        - <a href="https://static.geotribu.fr/articles/2021/2021-02-23_carte_ligne_libre/#2-mobiliser-des-fonds-de-cartes-vectoriels-libres">Des fonds de carte où piocher</a></h2>
+        - <a href="https://geoservices.ign.fr/documentation/services/api-et-services-ogc/tuiles-vectorielles-tmswmts/styles">Doc IGN</a>
+        <div id="menu"></div>
       <div class="map" style="width: 100%; height: 400px;"></div>
     </div>
 
     <script>
-      const style_url = "https://wxs.ign.fr/essentiels/static/vectorTiles/styles/PLAN.IGN/standard.json";
+      const liste_fonds = {
+        ign_standard: {
+          libelle: 'IGN standard',
+          url: 'https://wxs.ign.fr/essentiels/static/vectorTiles/styles/PLAN.IGN/standard.json',
+          correctif_ign: true,
+        },
+        ign_attenue: {
+          libelle: 'IGN attenué',
+          url: 'https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/attenue.json',
+          correctif_ign: true,
+        },
+        ign_gris: {
+          libelle: 'IGN gris',
+          url: 'https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/gris.json',
+          correctif_ign: true,
+        },     
+        ign_sans_toponyme: {
+          libelle: 'IGN sans toponyme',
+          url: 'https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/sans_toponymes.json',
+          correctif_ign: true,
+        },        
+        etalab_bright: {
+          libelle: 'Etatlab OSM Bright',
+          url: 'https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json'
+        },
+      }
 
-      fetch(style_url)
+      // CHANGEMENT DE FONDS
+      // Création des boutons
+      const menu = document.getElementById("menu");
+      const makeInput = (obj) => `
+      ${Object.entries(obj)        
+        .map(([key, value]) => `<button type="button" id="${key}">${value.libelle}</button>`)
+        .join("\n")}
+      `;
+      menu.innerHTML = makeInput(liste_fonds);
+      // CHANGEMENT DE FONDS
+      
+      // Par défaut on charge le premier fond
+      fetch(liste_fonds["ign_gris"]["url"])
         .catch(err => {
             console.log('Le `fetch()` du style à échoué');
         })
         .then((res) => res.json())
         .then((style) => {
+          if (liste_fonds["ign_standard"]["correctif_ign"]) {
             // Patch tms scheme to xyz to make it compatible for Maplibre GL JS / Mapbox GL JS
             // https://guides.etalab.gouv.fr/apis-geo/3-tuiles-vecteur.html#l-alternative-des-tuiles-vecteur-de-l-ign
             style.sources.plan_ign.scheme = "xyz";
-            style.sources.plan_ign.attribution = "Attribution";
+            style.sources.plan_ign.attribution = "© IGN";
+          }
 
-            const map = new maplibregl.Map({
-            style: style,
-            center: [2.35, 48.85],
-            zoom: 11,
-            container: document.querySelector(".map"),
-            });
+          const map = new maplibregl.Map({
+          style: style,
+          center: [2.35, 48.85],
+          zoom: 11,
+          container: document.querySelector(".map"),
+          });
 
             map.on('load', () => {
                 // On désactive le compass
@@ -96,8 +145,33 @@
                 },
                 };
 
-                map.addLayer(layerOptions, 'toponyme quartier ');
+                map.addLayer(layerOptions);
             });
+
+            // Rajout évenement sur les boutons
+            const buttons = menu.getElementsByTagName('button');
+ 
+            for (const button of buttons) {
+              button.onclick = (layer) => {
+                idFond = layer.target.id;
+                url_style = liste_fonds[idFond]["url"];
+
+                fetch(url_style)
+                  .catch(err => {
+                      console.log('Le `fetch()` du style à échoué');
+                  })
+                  .then((res) => res.json())
+                  .then((style) => {
+                    if (liste_fonds[idFond]["correctif_ign"]) {
+                      // Patch tms scheme to xyz to make it compatible for Maplibre GL JS / Mapbox GL JS
+                      // https://guides.etalab.gouv.fr/apis-geo/3-tuiles-vecteur.html#l-alternative-des-tuiles-vecteur-de-l-ign
+                      style.sources.plan_ign.scheme = "xyz";
+                      style.sources.plan_ign.attribution = "© IGN";
+                    }
+                    map.setStyle(style);
+                  })
+                }
+            }
         });
     </script>
   </body>
