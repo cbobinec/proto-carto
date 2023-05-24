@@ -90,6 +90,8 @@
                 };
 
                     // Contours IGN raster
+                    // TODO : tester WFS pour du vectoriel? Pas réussi à faire fonctionner...
+                    // https://wxs.ign.fr/cartovecto/geoportail/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetCapabilities
                     map.addSource("wms-test-source", {
                       type: "raster",
                       tiles: [
