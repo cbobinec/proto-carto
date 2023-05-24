@@ -50,8 +50,8 @@
 
             const map = new maplibregl.Map({
             style: style,
-            center: [2.35, 48.85],
-            zoom: 11,
+            center: [-1.5646, 47.1847],
+            zoom: 12,
             container: document.querySelector(".map"),
             });
 
@@ -63,13 +63,14 @@
                 // QP_METROPOLEOUTREMER_WGS84_EPSG4326.shp
                 // Pour alléger le geojson (sinon il faudra tuiler)
                 // COORDINATE_PRECISION = 3 => pas assez précis donne des formes bizarres !
-                // COORDINATE_PRECISION = 10 => 
+                // COORDINATE_PRECISION = 10 => C'est mieux mais plus lourd forcément (5.6 Mo)
                 // CODE_QP et NOM_QP uniquement
                 map.addSource('qpv-source', {
                   'type': 'geojson',
                   'data': 'data/qpv.geojson',
                 });
 
+                // Les contours
                 map.addLayer({
                   'id': 'qpv',
                   'type': 'line',
@@ -80,13 +81,18 @@
                   }
                 });
 
-                map.on('click', 'qpv', function (e) {
-                  new maplibregl.Popup()
-                  .setLngLat(e.lngLat)
-                  .setHTML(e.features[0].properties.name)
-                  .addTo(map);
-                });
-
+                // Le contenu pour afficher une étiquette dedans? provoque des erreurs
+                // map.addLayer({
+                //   'id': 'qpvsymbol',
+                //   'type': 'symbol',
+                //   'source': 'qpv-source',
+                //   'layout': {
+                //     'text-field': ['get', 'CODE_QP'],
+                //     'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
+                //     'text-radial-offset': 0.5,
+                //     'text-justify': 'auto',
+                //     }
+                // });
                 // FIN AJOUT QPV
 
                 map.addSource('insee200m', {
