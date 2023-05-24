@@ -65,11 +65,23 @@
           libelle: 'IGN sans toponyme',
           url: 'https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/sans_toponymes.json',
           correctif_ign: true,
-        },        
+        },  
+        // https://geoservices.ign.fr/documentation/services/utilisation-web/affichage-wmts/leaflet-et-wmts
+        ign_ortho: {
+          libelle: 'IGN Orthophotos',
+          url: 'styles/ign-ortho.json',
+          correctif_ign: false,
+        },      
         etalab_bright: {
           libelle: 'Etatlab OSM Bright',
-          url: 'https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json'
-        },
+          url: 'https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json',
+          correctif_ign: false,
+        },    
+        osm: {
+          libelle: 'OSM',
+          url: 'styles/osm.json',
+          correctif_ign: false,
+        },   
       }
 
       // CHANGEMENT DE FONDS
@@ -83,14 +95,17 @@
       menu.innerHTML = makeInput(liste_fonds);
       // CHANGEMENT DE FONDS
       
-      // Par défaut on charge le premier fond
-      fetch(liste_fonds["ign_gris"]["url"])
+      // Principe : une fonction regener entierement la carte à chaque changement de fond
+      // Sinon un simple setStyle pourrait suffire si on n'avait pas de fetch/bidouille style IGN a appliquer...
+      // Stocker plutôt les styles IGN en local pour s'éviter ça?
+      const generer_carte = function generer_carte(fond_id) {
+        fetch(liste_fonds[fond_id]["url"])
         .catch(err => {
             console.log('Le `fetch()` du style à échoué');
         })
         .then((res) => res.json())
         .then((style) => {
-          if (liste_fonds["ign_standard"]["correctif_ign"]) {
+          if (liste_fonds[fond_id]["correctif_ign"]) {
             // Patch tms scheme to xyz to make it compatible for Maplibre GL JS / Mapbox GL JS
             // https://guides.etalab.gouv.fr/apis-geo/3-tuiles-vecteur.html#l-alternative-des-tuiles-vecteur-de-l-ign
             style.sources.plan_ign.scheme = "xyz";
@@ -154,25 +169,14 @@
             for (const button of buttons) {
               button.onclick = (layer) => {
                 idFond = layer.target.id;
-                url_style = liste_fonds[idFond]["url"];
-
-                fetch(url_style)
-                  .catch(err => {
-                      console.log('Le `fetch()` du style à échoué');
-                  })
-                  .then((res) => res.json())
-                  .then((style) => {
-                    if (liste_fonds[idFond]["correctif_ign"]) {
-                      // Patch tms scheme to xyz to make it compatible for Maplibre GL JS / Mapbox GL JS
-                      // https://guides.etalab.gouv.fr/apis-geo/3-tuiles-vecteur.html#l-alternative-des-tuiles-vecteur-de-l-ign
-                      style.sources.plan_ign.scheme = "xyz";
-                      style.sources.plan_ign.attribution = "© IGN";
-                    }
-                    map.setStyle(style);
-                  })
-                }
+                generer_carte(idFond)
+              }
             }
-        });
+      });
+    }
+
+      // Par défaut on charge avec un fond
+      generer_carte("ign_gris");      
     </script>
   </body>
 </html>
