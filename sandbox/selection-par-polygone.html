@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.4.0/mapbox-gl-draw.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.4.0/mapbox-gl-draw.css"
+        type="text/css">
+         
+    <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
+
+    <style>
+        html {
+            max-width: 120ch;
+            padding: 3em 1em;
+            margin: auto;
+            line-height: 1.75;
+            font-size: 1.25em;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 1em 0 1em;
+        }
+
+        p,
+        ul,
+        ol {
+            margin-bottom: 2em;
+            color: #1d1d1d;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>Bac à sable Maplibre : selection manuelle</h1>
+        <div class="map" style="width: 100%; height: 400px;"></div>
+    </div>
+
+    <script>
+        const style_url = "https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json";
+
+        const map = new maplibregl.Map({
+            style: style_url,
+            center: [-1.5646, 47.1847],
+            zoom: 12,
+            container: document.querySelector(".map"),
+        });
+
+        map.on('load', () => {
+            map.addControl(new maplibregl.NavigationControl());
+
+            map.addSource('insee200m', {
+                type: 'vector',
+                tiles: [`https://insee-odl-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf`],
+                minzoom: 11,
+                maxzoom: 11,
+            });
+
+            map.addLayer({
+                id: 'insee_carroyage200m_fill',
+                source: 'insee200m',
+                type: 'fill',
+                'source-layer': 'custom',
+                paint: {
+                    'fill-opacity': 0.5,
+                    'fill-color': [
+                        'step', // function
+                        ['get', 'Ind'], // value
+                        '#FFFFCC',
+                        10, '#FFFFCC',
+                        20, '#FFE6B4',
+                        50, '#FFC696',
+                        300, '#FFA176',
+                        1300, '#FF7755',
+                        3200, '#E05544',
+                        6300, '#cc3333',
+                        12000, '#990000',
+                        23600, '#660000',
+                    ],
+                },
+            });
+
+            // https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-draw/
+            const draw = new MapboxDraw({
+                displayControlsDefault: false,
+                // Select which mapbox-gl-draw control buttons to add to the map.
+                controls: {
+                    polygon: true,
+                    trash: true
+                },
+                // Set mapbox-gl-draw to draw by default.
+                // The user does not have to click the polygon control button first.
+                defaultMode: 'draw_polygon'
+            });
+            map.addControl(draw);
+
+            map.on('draw.create', updateArea);
+            map.on('draw.delete', updateArea);
+            map.on('draw.update', updateArea);
+
+            function updateArea(e) {
+                const data = draw.getAll();
+
+                //TODO Calculer bbox puis map.queryRenderedFeatures
+
+                if (data.features.length > 0) {
+                    // https://stackoverflow.com/questions/73798248/querying-features-in-mapbox-which-are-not-visible
+                    const bbox = turf.polygon(data);
+                    const features = map.queryRenderedFeatures(bbox, {
+                        layers: ["insee_carroyage200m_fill"],
+                    });
+
+                    const featureIds = features.map(
+                        (feature) => feature.properties.Idcar_200m
+                    );
+
+                    // TODO marche pas, à creuser : https://github.com/mapbox/mapbox-gl-js/issues/4787#issuecomment-886665779
+                } else {
+                    if (e.type !== 'draw.delete')
+                        alert('Cliquer sur la carte pour sélectionner un poygone');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
