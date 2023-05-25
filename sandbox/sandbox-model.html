@@ -50,8 +50,8 @@
 
             const map = new maplibregl.Map({
             style: style,
-            center: [2.35, 48.85],
-            zoom: 11,
+            center: [-1.5646, 47.1847],
+            zoom: 12,
             container: document.querySelector(".map"),
             });
 
@@ -60,9 +60,9 @@
 
                 map.addSource('insee200m', {
                 type: 'vector',
-                tiles: [`https://insee-proto-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf`],
-                minzoom: 10,
-                maxzoom: 10,
+                tiles: [`https://insee-odl-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf`],
+                minzoom: 11,
+                maxzoom: 11,
                 });
 
                 const layerOptions = {
@@ -74,7 +74,7 @@
                     'fill-opacity': 0.5,
                     'fill-color': [
                     'step', // function
-                    ['get', 'Men'], // value
+                    ['get', 'Ind'], // value
                     '#FFFFCC',
                     10, '#FFFFCC',
                     20, '#FFE6B4',

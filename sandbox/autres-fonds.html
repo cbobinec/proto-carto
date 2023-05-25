@@ -130,10 +130,10 @@
                 map.addControl(new maplibregl.GeolocateControl());
 
                 map.addSource('insee200m', {
-                type: 'vector',
-                tiles: [`https://insee-proto-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf`],
-                minzoom: 10,
-                maxzoom: 10,
+                  type: 'vector',
+                  tiles: [`https://insee-odl-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf`],
+                  minzoom: 11,
+                  maxzoom: 11,
                 });
 
                 const layerOptions = {
