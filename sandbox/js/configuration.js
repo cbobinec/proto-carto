@@ -2,12 +2,24 @@ const tiles_url = [`https://insee-odl-tiles.netlify.app/filosofi-2017-200m/{z}/{
 
 const indicateur_par_defaut = "niveau_vie_moyen";
 
+const palette_jaune_rouge = ["#FFFFCC", 
+                            "#FFE6B4",
+                            "#FFC696",
+                            "#FFA176",
+                            "#FF7755",
+                            "#E05544",
+                            "#cc3333",
+                            "#990000", 
+                            "#660000"]
+
 const configuration_indicateurs = {
     nb_individus: {
         libelle: 'Nombre d\'individus au sens fiscal',
         numerateur: 'Ind',
         denominateur: '1',
         pourcentage: false,
+        classes: [10, 20, 50, 300, 1300, 3200, 6300, 12000, 23600],
+        palette: palette_jaune_rouge,
     },
     niveau_vie_moyen: {
         libelle: 'Niveau de vie winsorisé des individus, y compris valeurs modifiées',

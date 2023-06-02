@@ -33,20 +33,32 @@ function mettreAJourRepresentationIndicateur(map, indicateur_choisi) {
         configuration.denominateur,
         configuration.pourcentage)
 
+    stepMapbox = genererStepMapbox(configuration.classes, configuration.palette)
+
     // On change la représentation
+    // step : https://stackoverflow.com/a/53506912
     map.setPaintProperty('insee_carroyage200m_fill', 
                         'fill-color', 
                         ['step', // function
                         expressionMapbox, // value
-                        '#FFFFCC',
-                        10, '#FFFFCC',
-                        20, '#FFE6B4',
-                        50, '#FFC696',
-                        300, '#FFA176',
-                        1300, '#FF7755',
-                        3200, '#E05544',
-                        6300, '#cc3333',
-                        12000, '#990000',
-                        23600, '#660000',
+                        ...
     ]);
 }
+
+/*
+* Génère l'expression step mapbox permettant de réprenter 
+*/
+function genererStepMapbox(classes,palette) {
+      if (classes.length > palette.length) {
+        alert("La palette est trop petite pour le nombre de classes à représenter !");
+      }
+      // Le premier élement est la première valeur, sans couleur associée
+      resultat = [ palette_jaune_rouge[0] ]
+    
+      // Ensuite on alterne borne de classe, et couleur associée
+      // Ce qui induit un décalage d'indice : la classe 1 a pour couleur la 2eme couleur de la palette
+      classes.forEach((classe, index) => {
+          resultat.push(classe, palette_jaune_rouge[index+1])
+      });
+      return resultat;
+    }
