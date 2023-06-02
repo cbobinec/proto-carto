@@ -1,5 +1,7 @@
 const tiles_url = [`https://insee-odl-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf`]
 
+const indicateur_par_defaut = "niveau_vie_moyen";
+
 const configuration_indicateurs = {
     nb_individus: {
         libelle: 'Nombre d\'individus au sens fiscal',
