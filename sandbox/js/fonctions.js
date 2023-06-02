@@ -52,16 +52,16 @@ function mettreAJourRepresentationIndicateur(map, indicateur_choisi) {
 * https://docs.mapbox.com/mapbox-gl-js/style-spec/expressions/#step
 */
 function genererStepMapbox(classes,palette) {
-      if (classes.length > palette.length) {
-        alert("La palette est trop petite pour le nombre de classes à représenter !");
+      if (classes.length + 1 != palette.length) {
+        console.error("La palette utilisée doit comprendre le nombre de classes + 1");
       }
       // Le premier élement est la première valeur de la palette, celle par défaut avant les seuils de classe
-      resultat = [ palette_jaune_rouge[0] ]
+      resultat = [ palette[0] ]
     
       // Ensuite on alterne borne de classe, et couleur associée
       // Ce qui induit un décalage d'indice : la classe 1 a pour couleur la 2eme couleur de la palette
       classes.forEach((classe, index) => {
-          resultat.push(classe, palette_jaune_rouge[index+1])
+          resultat.push(classe, palette[index+1])
       });
       return resultat;
     }

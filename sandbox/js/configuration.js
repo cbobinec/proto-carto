@@ -2,7 +2,7 @@ const tiles_url = [`https://insee-odl-tiles.netlify.app/filosofi-2017-200m/{z}/{
 
 const indicateur_par_defaut = "niveau_vie_moyen";
 
-const palette_jaune_rouge = ['#FFFFFF',
+const palette_jaune_rouge_9 = ['#FFFFFF',
                             '#FFFFCC', 
                             '#FFE6B4',
                             '#FFC696',
@@ -13,6 +13,17 @@ const palette_jaune_rouge = ['#FFFFFF',
                             '#990000', 
                             '#660000']
 
+const palette_jaune_rouge_6 = ['#FFFFFF',
+                            '#FFFFCC', 
+                            // '#FFE6B4',
+                            '#FFC696',
+                            '#FFA176',
+                            // '#FF7755',
+                            '#E05544',
+                            // '#cc3333',
+                            '#990000', 
+                            '#660000']
+
 const configuration_indicateurs = {
     nb_individus: {
         libelle: 'Nombre d\'individus au sens fiscal',
@@ -20,7 +31,7 @@ const configuration_indicateurs = {
         denominateur: '1',
         pourcentage: false,
         classes: [10, 20, 50, 300, 1300, 3200, 6300, 12000, 23600],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_9,
     },
     niveau_vie_moyen: {
         libelle: 'Niveau de vie winsorisé des individus, y compris valeurs modifiées',
@@ -28,7 +39,7 @@ const configuration_indicateurs = {
         denominateur: 'Ind',
         pourcentage: false,
         classes: [17900, 20200, 22200, 24400, 27300, 32300],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
     part_fam_monop: {
         libelle: 'Part des familles monoparentales',
@@ -36,7 +47,7 @@ const configuration_indicateurs = {
         denominateur: 'Men',
         pourcentage: true,
         classes: [2, 6, 9, 12, 16, 23],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
     part_logts_sociaux: {
         libelle: 'Part des logements sociaux',
@@ -44,7 +55,7 @@ const configuration_indicateurs = {
         denominateur: 'Log',
         pourcentage: true,
         classes: [3, 11, 19, 30, 45, 65],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
     part_men_pauv: {
         libelle: 'Part des ménages pauvres',
@@ -52,7 +63,7 @@ const configuration_indicateurs = {
         denominateur: 'Men',
         pourcentage: true,
         classes: [4, 9, 14, 20, 28, 39],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
     part_men_prop: {
         libelle: 'Part des ménages propriétaires',
@@ -60,7 +71,7 @@ const configuration_indicateurs = {
         denominateur: 'Men',
         pourcentage: true,
         classes: [40, 57, 69, 78, 86, 93],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
     part_menages_1pers: {
         libelle: 'Part des ménages d\'une seule personne',
@@ -68,7 +79,7 @@ const configuration_indicateurs = {
         denominateur: 'Men',
         pourcentage: true,
         classes: [13, 20, 26, 32, 39, 49],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
     part_menages_5pers: {
         libelle: 'Part des ménages de 5 personnes ou plus',
@@ -76,7 +87,7 @@ const configuration_indicateurs = {
         denominateur: 'Men',
         pourcentage: true,
         classes: [2, 5, 8, 11, 15, 23],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
     part_moins_18_ans: {
         libelle: 'Part des personnes âgées de moins de 18 ans, y compris valeurs modifiées',
@@ -84,7 +95,7 @@ const configuration_indicateurs = {
         denominateur: 'Ind',
         pourcentage: true,
         classes: [7, 13, 17, 21, 25, 30],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
     part_plus_65_ans: {
         libelle: 'Part des personnes âgées de 65 ans ou plus, y compris valeurs modifiées',
@@ -92,7 +103,7 @@ const configuration_indicateurs = {
         denominateur: 'Ind',
         pourcentage: true,
         classes: [10, 15, 19, 24, 30, 40],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
     surf_moyenne: {
         libelle: 'Surface moyenne des logements',
@@ -100,6 +111,6 @@ const configuration_indicateurs = {
         denominateur: 'Men',
         pourcentage: false,
         classes: [80, 100, 110, 120, 130, 150],
-        palette: palette_jaune_rouge,
+        palette: palette_jaune_rouge_6,
     },
 }
