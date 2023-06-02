@@ -7,7 +7,8 @@
 
   <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
   <!-- configuration sortie à part -->
-  <script src="js/configuration-indicateurs.js"></script>
+  <script src="js/fonctions.js"></script>
+  <script src="js/configuration.js"></script>
   <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
 
   <style>
@@ -63,7 +64,7 @@
 
       map.addSource('insee200m', {
         type: 'vector',
-        tiles: [`https://insee-odl-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf`],
+        tiles: tiles_url,
         minzoom: 11,
         maxzoom: 11,
       });
@@ -108,15 +109,20 @@
         indicateur_select.add(option, null);
       }
 
+      // Mise à jour des infos quand l'indicateur sélectionné change
       indicateur_select.addEventListener("change", () => {
-        indicateur_choisi = indicateur_select.value;
-        expression_mapbox = configuration_indicateurs[indicateur_choisi].expression_mapbox;
+        const indicateur_choisi = indicateur_select.value;
+        const configuration = configuration_indicateurs[indicateur];
+
+        expressionMapbox = genererExpressionMapbox(configuration.numerateur,
+          configuration.denominateur,
+          configuration.pourcentage)
 
         // On change la représentation
         map.setPaintProperty('insee_carroyage200m_fill', 
                             'fill-color', 
                             ['step', // function
-                            expression_mapbox, // value
+                            expressionMapbox, // value
                             '#FFFFCC',
                             10, '#FFFFCC',
                             20, '#FFE6B4',
