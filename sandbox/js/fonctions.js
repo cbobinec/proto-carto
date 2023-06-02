@@ -44,6 +44,8 @@ function mettreAJourRepresentationIndicateur(map, indicateur_choisi) {
     map.setPaintProperty('insee_carroyage200m_fill', 
                         'fill-color', 
                         fillColorValue);
+
+    genereLegende(indicateur_choisi);
 }
 
 /*
@@ -65,3 +67,73 @@ function genererStepMapbox(classes,palette) {
       });
       return resultat;
     }
+
+function genereLegende(indicateur_choisi) {    
+    const configuration = configuration_indicateurs[indicateur_choisi];
+
+    // Infos de l'indicateur
+    const classes = configuration.classes;
+    const palette = configuration.palette;
+    const libelle = configuration.libelle;
+    const pourcentage = configuration.pourcentage;
+    
+    // Espace où insérer la légende
+    const legende = document.getElementById("legende");
+    // On supprime la légende éventuellement déjà présente pour un autre indicateur
+    legende.replaceChildren(); 
+
+    // Titre de l'indicateur
+    const item = document.createElement("div");
+    const value = document.createElement("span");
+    value.innerHTML = `<b>${libelle}</b>`;
+    legende.appendChild(value);
+    legende.appendChild(item);
+
+    // On créée les couleurs/textes un par un
+    let seuil_precedent = null;
+
+    classes.forEach((seuil, i) => {
+        const couleur = palette[i];
+        let item = genererLigneLegende(seuil, seuil_precedent, couleur, pourcentage);
+        legende.appendChild(item);
+        seuil_precedent = seuil;      
+    });
+
+    // On n'oublie pas la dernière couleur, le "plus de"
+    // .slice(-1) permet de récupérer le dernier element
+    const derniereLigneLegende = genererLigneLegende(null, classes.slice(-1), palette.slice(-1), pourcentage);
+    legende.appendChild(derniereLigneLegende);
+}
+
+function genererLigneLegende(seuil, seuil_precedent, couleur, pourcentage) {    
+    const item = document.createElement("div");
+    const key = document.createElement("span");
+    key.className = "legend-key";
+    key.style.backgroundColor = couleur;
+
+    const value = document.createElement("span");
+    value.innerHTML = genererTexteLegende(seuil, seuil_precedent, pourcentage);
+    item.appendChild(key);
+    item.appendChild(value);
+    return item;
+}
+
+function genererTexteLegende(seuil, seuil_precedent, pourcentage) {
+    // .toLocaleString() permet d'ajouter les séparateur de millier
+    if (seuil_precedent && seuil) {
+        return `De ${valeurToString(seuil_precedent, pourcentage)} à moins de ${valeurToString(seuil, pourcentage)}`
+    } else if (seuil) {
+        return `Moins de ${valeurToString(seuil, pourcentage)}`;
+    } else if (seuil_precedent) {
+        return `Plus de ${valeurToString(seuil_precedent, pourcentage)}`;
+    }
+}
+
+function valeurToString(valeur, pourcentage) {
+    if (pourcentage) {
+        return `${valeur.toLocaleString()}%`;
+    }
+    else {
+        return `${valeur.toLocaleString()}`;
+    }
+}
