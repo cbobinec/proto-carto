@@ -42,6 +42,7 @@
 <body>
   <div>
     <h1>Bac à sable Maplibre</h1>
+    <h2 id="titre_indicateur"></h2>
     <select id="indicateur"></select>
     <div class="map" style="width: 100%; height: 400px;"></div>
   </div>
@@ -113,6 +114,8 @@
       indicateur_select.addEventListener("change", () => {
         const indicateur_choisi = indicateur_select.value;
         const configuration = configuration_indicateurs[indicateur];
+
+        document.getElementById("titre_indicateur").innerHTML=configuration.libelle;
 
         expressionMapbox = genererExpressionMapbox(configuration.numerateur,
           configuration.denominateur,
