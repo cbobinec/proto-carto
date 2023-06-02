@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+  <!-- configuration sortie à part -->
+  <script src="js/configuration-indicateurs.js"></script>
   <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
 
   <style>
@@ -39,39 +41,13 @@
 <body>
   <div>
     <h1>Bac à sable Maplibre</h1>
+    <select id="indicateur"></select>
     <div class="map" style="width: 100%; height: 400px;"></div>
   </div>
 
   <script>
     const style_url = "https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json";
-
-    const liste_indicateurs = {
-            niveau_vie_moyen: {
-                libelle: 'Part des ménages pauvres',
-                expression_mapbox: [
-                    "*",
-                    100,
-                    [
-                        "/",
-                        ["get", "Men_pauv"],
-                        ["get", "Men"]
-                    ]
-                ]
-            },
-            part_fam_monop: {
-                libelle: 'Part des familles monoparentales',
-                expression_mapbox: [
-                    "*",
-                    100,
-                    [
-                        "/",
-                        ["get", "Men_fmp"],
-                        ["get", "Men"]
-                    ]
-                ]
-            }
-        }
-
+    
     // TODO : numerateur, denominateur (1 par défaut), pourcentage = TRUE/FALSE (TRUE => *100 + affichage de '%')
     // Générer aussi la légende, les classes...
 
@@ -116,6 +92,44 @@
         },
       });
     });
+
+    // Exemple : https://github.com/mapbox/storytelling/tree/main/example/glacier
+    // https://docs.mapbox.com/mapbox-gl-js/example/color-switcher/
+
+      // Menu select listant les indicateurs
+      const indicateur_select = document.getElementById("indicateur");
+
+      for (var indicateur in configuration_indicateurs) {
+        // On créee l'option correspondante
+        const option = document.createElement("option");
+        option.value = indicateur;
+        option.text = configuration_indicateurs[indicateur].libelle;
+        
+        indicateur_select.add(option, null);
+      }
+
+      indicateur_select.addEventListener("change", () => {
+        indicateur_choisi = indicateur_select.value;
+        expression_mapbox = configuration_indicateurs[indicateur_choisi].expression_mapbox;
+
+        // On change la représentation
+        map.setPaintProperty('insee_carroyage200m_fill', 
+                            'fill-color', 
+                            ['step', // function
+                            expression_mapbox, // value
+                            '#FFFFCC',
+                            10, '#FFFFCC',
+                            20, '#FFE6B4',
+                            50, '#FFC696',
+                            300, '#FFA176',
+                            1300, '#FF7755',
+                            3200, '#E05544',
+                            6300, '#cc3333',
+                            12000, '#990000',
+                            23600, '#660000',
+      ]);
+      });
+
   </script>
 </body>
 
