@@ -9,17 +9,25 @@
   <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
 
   <style>
-    map {
-      position: absolute; 
-      width: 100%;
-      height: 200px;
+    :root {
+      --contentHeight: 55px;
+    }
+    #banner {
+      min-height: var(--contentHeight);
+    }
+    #map {
+      position: absolute;
+      top: var(--contentHeight);      
+      width: 99%;
+      height: calc(100% - var(--contentHeight));
     }
   </style>
+  <!-- Pourquoi width: 100% génère une ascenseur? -->
 </head>
 
 <body>
   <div id="banner">
-    Bannière haut Exemple... https://www.openstreetmap.org
+    Bannière haut Exemple fixe
   </div>
   <div id="map"></div>
   </div>
