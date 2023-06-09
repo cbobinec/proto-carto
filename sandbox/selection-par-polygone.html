@@ -92,6 +92,19 @@
                 },
             });
 
+            // Couche de selection : on applique un peu de rouge
+            map.addLayer({
+            source: 'insee200m',
+            id: 'insee_carroyage200m_highlight',
+            type: 'fill',
+            'source-layer': 'custom',
+            paint: {
+              'fill-opacity': 0.7,
+              'fill-color': 'red',
+            },
+            filter: ['in', 'Idcar_200m', ''],
+          });
+
             // https://docs.mapbox.com/mapbox-gl-js/example/mapbox-gl-draw/
             const draw = new MapboxDraw({
                 displayControlsDefault: false,
@@ -119,6 +132,7 @@
                 const bbox = turf.bbox(filterPolygon);
 
                 const featuresInBBox = map.queryRenderedFeatures(
+                    // On reprojette car queryRendered demande du x y
                     [map.project([bbox[0], bbox[1]]), map.project([bbox[2], bbox[3]])],
                     { layers: ["insee_carroyage200m_fill"] }
                 );
@@ -128,7 +142,10 @@
                 );
 
                 console.log('filteredFeatures', filteredFeatures);
+
                 // Colorer les features en fonction de leur appartenance à la sélection
+                const featureIds = filteredFeatures.map((filteredFeatures) => filteredFeatures.properties.Idcar_200m);
+                map.setFilter('insee_carroyage200m_highlight', ['in', 'Idcar_200m', ...featureIds]);
             };
 
             map.on('draw.create', updateArea);
