@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+
+  <style>
+    map {
+      position: absolute; 
+      width: 100%;
+      height: 200px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="banner">
+    Bannière haut Exemple... https://www.openstreetmap.org
+  </div>
+  <div id="map"></div>
+  </div>
+
+  <script>
+    const style_url = "https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json";
+
+    const map = new maplibregl.Map({
+      style: style_url,
+      center: [-1.5646, 47.1847],
+      zoom: 12,
+      container: document.querySelector("#map"),
+    });
+
+    map.on('load', () => {
+      map.addControl(new maplibregl.NavigationControl());
+
+      map.addSource('insee200m', {
+        type: 'vector',
+        tiles: [`https://insee-odl-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf`],
+        minzoom: 11,
+        maxzoom: 11,
+      });
+
+      map.addLayer({
+        id: 'insee_carroyage200m_fill',
+        source: 'insee200m',
+        type: 'fill',
+        'source-layer': 'custom',
+        paint: {
+          'fill-opacity': 0.5,
+          'fill-color': [
+            'step', // function
+            ['get', 'Ind'], // value
+            '#FFFFCC',
+            10, '#FFFFCC',
+            20, '#FFE6B4',
+            50, '#FFC696',
+            300, '#FFA176',
+            1300, '#FF7755',
+            3200, '#E05544',
+            6300, '#cc3333',
+            12000, '#990000',
+            23600, '#660000',
+          ],
+        },
+      });
+    });
+  </script>
+</body>
+
+</html>
