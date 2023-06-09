@@ -52,6 +52,9 @@
       container: document.querySelector(".map"),
     });
 
+    // affiche à l'écran les contours et infos tuiles
+    map.showTileBoundaries = true;
+
     map.on('load', () => {
       map.addControl(new maplibregl.NavigationControl()); 
       
