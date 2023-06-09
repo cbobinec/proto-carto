@@ -104,34 +104,36 @@
                 // The user does not have to click the polygon control button first.
                 defaultMode: 'draw_polygon'
             });
+
             map.addControl(draw);
+
+            const updateArea = event => {
+                const data = draw.getAll();
+
+                if (!data || !data.features || !data.features[0]) {
+                    return;
+                }
+
+                const filterPolygon = data.features[0];
+
+                const bbox = turf.bbox(filterPolygon);
+
+                const featuresInBBox = map.queryRenderedFeatures(
+                    [map.project([bbox[0], bbox[1]]), map.project([bbox[2], bbox[3]])],
+                    { layers: ["insee_carroyage200m_fill"] }
+                );
+
+                const filteredFeatures = featuresInBBox.filter(feature =>
+                    turf.booleanIntersects(filterPolygon, feature)
+                );
+
+                console.log('filteredFeatures', filteredFeatures);
+                // Colorer les features en fonction de leur appartenance à la sélection
+            };
 
             map.on('draw.create', updateArea);
             map.on('draw.delete', updateArea);
             map.on('draw.update', updateArea);
-
-            function updateArea(e) {
-                const data = draw.getAll();
-
-                //TODO Calculer bbox puis map.queryRenderedFeatures
-
-                if (data.features.length > 0) {
-                    // https://stackoverflow.com/questions/73798248/querying-features-in-mapbox-which-are-not-visible
-                    const bbox = turf.polygon(data);
-                    const features = map.queryRenderedFeatures(bbox, {
-                        layers: ["insee_carroyage200m_fill"],
-                    });
-
-                    const featureIds = features.map(
-                        (feature) => feature.properties.Idcar_200m
-                    );
-
-                    // TODO marche pas, à creuser : https://github.com/mapbox/mapbox-gl-js/issues/4787#issuecomment-886665779
-                } else {
-                    if (e.type !== 'draw.delete')
-                        alert('Cliquer sur la carte pour sélectionner un poygone');
-                }
-            }
         });
     </script>
 </body>
