@@ -141,11 +141,12 @@
                     turf.booleanIntersects(filterPolygon, feature)
                 );
 
-                console.log('filteredFeatures', filteredFeatures);
-
                 // Colorer les features en fonction de leur appartenance à la sélection
                 const featureIds = filteredFeatures.map((filteredFeatures) => filteredFeatures.properties.Idcar_200m);
                 map.setFilter('insee_carroyage200m_highlight', ['in', 'Idcar_200m', ...featureIds]);
+
+                // Afficher quelque chose de la selection
+                alert("Carreaux sélectionnés : " + filteredFeatures.length)
             };
 
             map.on('draw.create', updateArea);
