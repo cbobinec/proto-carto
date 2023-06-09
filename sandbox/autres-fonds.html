@@ -6,6 +6,8 @@
 
     <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css" rel="stylesheet" />
+    <script src="js/style-switcher.js"></script>
+    <link href="styles/style-switcher.css" rel="stylesheet" />
 
     <style>
       html {
@@ -45,6 +47,17 @@
     </div>
 
     <script>
+      const styles = [
+          {
+              title: "Dark",
+              uri:"https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json"
+          },
+          {
+              title: "Light",
+              uri:"styles/ign-ortho.json"
+          }
+      ];
+
       const liste_fonds = {
         ign_standard: {
           libelle: 'IGN standard',
@@ -118,6 +131,40 @@
           zoom: 11,
           container: document.querySelector(".map"),
           });
+
+          window.map = map;
+
+          const options = {
+            eventListeners: {
+              onChange_: () => {
+                map.addLayer({
+                id: 'insee_carroyage200m_fill',
+                source: 'insee200m',
+                type: 'fill',
+                'source-layer': 'custom',
+                paint: {
+                    'fill-opacity': 0.5,
+                    'fill-color': [
+                    'step', // function
+                    ['get', 'Men'], // value
+                    '#FFFFCC',
+                    10, '#FFFFCC',
+                    20, '#FFE6B4',
+                    50, '#FFC696',
+                    300, '#FFA176',
+                    1300, '#FF7755',
+                    3200, '#E05544',
+                    6300, '#cc3333',
+                    12000, '#990000',
+                    23600, '#660000',
+                    ],
+                },
+              });
+              },
+            }
+          };
+
+          map.addControl(new MapboxStyleSwitcherControl(styles, options));
 
             map.on('load', () => {
                 // On désactive le compass
