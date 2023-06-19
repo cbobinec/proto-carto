@@ -3,8 +3,8 @@
 const style_url = "https://wxs.ign.fr/essentiels/static/vectorTiles/styles/PLAN.IGN/standard.json";
 // Tuiles carreaux+données Insee
 // Couches les plus fines pour zoom élevé
-const data_url_200m = "http://127.0.0.1:5500/prototype-carto-fine/tiles/filosofi-200m/{z}/{x}/{y}.pbf";
-//const data_url_200m = "https://insee-proto-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf";
+// const data_url_200m = "http://127.0.0.1:5500/prototype-carto-fine/tiles/filosofi-200m/{z}/{x}/{y}.pbf";
+const data_url_200m = "https://insee-odl-tiles.netlify.app/filosofi-2017-200m/{z}/{x}/{y}.pbf";
 // Nom de la layer du fond de carte par dessus laquelle "glisser"/intercaler la couche data
 // Permet : fond de carte < couche data insee < libellés du fond de carte
 const layer_insertion = "toponyme - bornes postales haute - chemins";
@@ -42,7 +42,6 @@ const classes_colors = [
 // Gros zoom moins consommateur pour les tests
 const default_center = [2.37, 48.881];
 const default_zoom = 11;
-console.log("paf");
 // Niveau de zoom associé à la recherche par adresse 
 const default_zoom_search = 14;
 
