@@ -116,6 +116,9 @@ function genererLigneLegende(seuil, seuil_precedent, couleur, pourcentage) {
     const key = document.createElement("span");
     key.className = "legend-key";
     key.style.backgroundColor = couleur;
+    key.onclick = () => {
+        alert("filtrer sur " + seuil + " - " + seuil_precedent);
+    }
 
     const value = document.createElement("span");
     value.innerHTML = genererTexteLegende(seuil, seuil_precedent, pourcentage);
