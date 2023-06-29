@@ -9,7 +9,8 @@
             "tiles": [
                 "https://wxs.ign.fr/essentiels/geoportail/tms/1.0.0/PLAN.IGN/{z}/{x}/{y}.pbf"
             ],
-            "scheme": "xyz"
+            "scheme": "xyz",
+			"attribution": "&copy; IGN"
         }
     },
 	"transition": {
