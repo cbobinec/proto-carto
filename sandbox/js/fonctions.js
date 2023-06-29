@@ -91,6 +91,12 @@ function genereLegende(indicateur_choisi) {
 
     // On créée les couleurs/textes un par un
     let seuil_precedent = null;
+    // Classement par ordre décroissant pour une légende suivant la charte graphique
+    function compareNumbers(a, b) {
+        return b - a;
+    }
+    classes.sort(compareNumbers);
+    palette.reverse();
 
     classes.forEach((seuil, i) => {
         const couleur = palette[i];
@@ -121,11 +127,11 @@ function genererLigneLegende(seuil, seuil_precedent, couleur, pourcentage) {
 function genererTexteLegende(seuil, seuil_precedent, pourcentage) {
     // .toLocaleString() permet d'ajouter les séparateur de millier
     if (seuil_precedent && seuil) {
-        return `De ${valeurToString(seuil_precedent, pourcentage)} à moins de ${valeurToString(seuil, pourcentage)}`
+        return `De ${valeurToString(seuil, pourcentage)} à moins de ${valeurToString(seuil_precedent, pourcentage)}`
     } else if (seuil) {
-        return `Moins de ${valeurToString(seuil, pourcentage)}`;
+        return `Plus de ${valeurToString(seuil, pourcentage)}`;
     } else if (seuil_precedent) {
-        return `Plus de ${valeurToString(seuil_precedent, pourcentage)}`;
+        return `Moins de ${valeurToString(seuil_precedent, pourcentage)}`;
     }
 }
 
